@@ -1,4 +1,4 @@
-"""Wrapper sobre faster-whisper."""
+"""Envoltorio sobre faster-whisper."""
 
 from __future__ import annotations
 
@@ -26,17 +26,33 @@ class Transcription:
         return " ".join(s.text.strip() for s in self.segments).strip()
 
 
+# Orden de preferencia: primero lo más rápido con buena calidad.
+# Las GPU antiguas (p. ej. GTX 10xx) no soportan float16 eficiente,
+# así que se cae a int8 o float32 según lo que la tarjeta permita.
+CUDA_COMPUTE_PREFERENCE = ["float16", "int8_float16", "int8", "int8_float32", "float32"]
+CPU_COMPUTE_PREFERENCE = ["int8", "int8_float32", "float32"]
+
+
+def pick_compute_type(supported: set[str], preference: list[str]) -> str:
+    for ct in preference:
+        if ct in supported:
+            return ct
+    return "float32"
+
+
 def detect_device() -> tuple[str, str]:
-    """Devuelve (device, compute_type) según haya GPU NVIDIA o no."""
+    """Devuelve (device, compute_type) según el hardware disponible."""
     try:
         import ctranslate2
 
         if ctranslate2.get_cuda_device_count() > 0:
-            return "cuda", "float16"
+            supported = set(ctranslate2.get_supported_compute_types("cuda"))
+            return "cuda", pick_compute_type(supported, CUDA_COMPUTE_PREFERENCE)
+        supported = set(ctranslate2.get_supported_compute_types("cpu"))
+        return "cpu", pick_compute_type(supported, CPU_COMPUTE_PREFERENCE)
     except Exception:
-        pass
-    # int8 en CPU: mucho más rápido y con poca pérdida de calidad.
-    return "cpu", "int8"
+        # int8 en CPU: mucho más rápido y con poca pérdida de calidad.
+        return "cpu", "int8"
 
 
 def load_model(model_size: str, device: str | None = None, compute_type: str | None = None):

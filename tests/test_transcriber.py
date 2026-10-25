@@ -34,3 +34,18 @@ def test_auto_language_passes_none():
     model = FakeModel()
     transcribe(model, "audio.opus", language="auto")
     assert model.kwargs["language"] is None
+
+
+def test_pick_compute_type_old_gpu_without_float16():
+    from src.transcriber import CUDA_COMPUTE_PREFERENCE, pick_compute_type
+
+    # Lo que reporta, por ejemplo, una GTX 1060
+    supported = {"float32", "int8", "int8_float32"}
+    assert pick_compute_type(supported, CUDA_COMPUTE_PREFERENCE) == "int8"
+
+
+def test_pick_compute_type_modern_gpu():
+    from src.transcriber import CUDA_COMPUTE_PREFERENCE, pick_compute_type
+
+    supported = {"float32", "float16", "int8", "int8_float16", "bfloat16"}
+    assert pick_compute_type(supported, CUDA_COMPUTE_PREFERENCE) == "float16"

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.svg" alt="Transcriptor" width="104">
+<img src="assets/logo.png" alt="Transcriptor" width="104">
 
 # Transcriptor
 

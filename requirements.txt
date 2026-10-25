@@ -1,4 +1,5 @@
-streamlit>=1.38
+# 1.50+: contenedores horizontales, st.space y tema con fuentes de Google
+streamlit>=1.50
 faster-whisper>=1.1
 # PyAV 19 eliminó un parámetro que usa faster-whisper al decodificar audio.
 # Quitar este límite cuando faster-whisper publique una versión compatible.

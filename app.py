@@ -18,6 +18,7 @@ from src.config import (
     LANGUAGES,
     MODEL_SIZES,
 )
+from src.downloader import DownloadProgress, cached_model_path, download_model, human_bytes
 from src.exporters import format_clock, to_srt, to_txt, to_vtt
 from src.transcriber import detect_device, load_model, transcribe
 
@@ -26,9 +27,39 @@ st.set_page_config(page_title="Transcriptor", page_icon=str(LOGO), layout="cente
 
 
 @st.cache_resource(show_spinner=False)
-def get_model(size: str):
+def get_model(model_path: str):
     """El modelo se carga una sola vez y se reutiliza entre transcripciones."""
-    return load_model(size)
+    return load_model(model_path)
+
+
+def ensure_model(model_size: str) -> str:
+    """Devuelve la ruta local del modelo; si no está, lo descarga con barra de progreso."""
+    path = cached_model_path(model_size)
+    if path:
+        return path
+
+    bar = st.progress(0.0, text=f"Preparando descarga del modelo «{model_size}»…")
+
+    def show(p: DownloadProgress):
+        speed = f" · {human_bytes(p.speed)}/s" if p.speed else ""
+        if p.total:
+            text = (
+                f"Descargando modelo «{model_size}»: "
+                f"{human_bytes(p.downloaded)} de {human_bytes(p.total)} ({p.fraction:.0%}){speed}"
+            )
+            bar.progress(p.fraction, text=text)
+        else:
+            bar.progress(0.0, text=f"Descargando modelo «{model_size}»: {human_bytes(p.downloaded)}{speed}")
+
+    try:
+        path = download_model(model_size, on_progress=show)
+    except Exception as e:
+        bar.empty()
+        st.error(f"No se pudo descargar el modelo: {e}")
+        st.stop()
+
+    bar.progress(1.0, text=f"Modelo «{model_size}» descargado ✓ (solo se descarga una vez)")
+    return path
 
 
 # ---------- Barra lateral: opciones ----------
@@ -74,25 +105,25 @@ files = st.file_uploader(
 )
 
 if files and st.button("Transcribir", type="primary", use_container_width=True):
-    with st.spinner(f"Cargando modelo «{model_size}» (la primera vez se descarga)…"):
-        model = get_model(model_size)
+    model_path = ensure_model(model_size)
+    with st.spinner(f"Cargando modelo «{model_size}» en {device.upper()}…"):
+        model = get_model(model_path)
 
     results = {}
     for f in files:
-        progress = st.progress(0.0, text=f"Transcribiendo {f.name}…")
+        progress = st.progress(0.0, text=f"Analizando {f.name}…")
         suffix = Path(f.name).suffix or ".audio"
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
             tmp.write(f.getbuffer())
             tmp_path = Path(tmp.name)
+
+        def on_progress(p: float, name=f.name, bar=progress):
+            bar.progress(p, text=f"Transcribiendo {name}… {p:.0%}")
+
         try:
-            results[f.name] = transcribe(
-                model,
-                tmp_path,
-                language=language,
-                vad_filter=vad,
-                on_progress=lambda p, n=f.name: progress.progress(p, text=f"Transcribiendo {n}… {p:.0%}"),
-            )
-            progress.progress(1.0, text=f"{f.name} ✓")
+            t = transcribe(model, tmp_path, language=language, vad_filter=vad, on_progress=on_progress)
+            results[f.name] = t
+            progress.progress(1.0, text=f"{f.name} ✓ · {format_clock(t.duration)} de audio")
         except Exception as e:  # audio corrupto, formato raro, etc.
             progress.empty()
             st.error(f"No se pudo transcribir **{f.name}**: {e}")

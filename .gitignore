@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Audios y transcripciones de prueba (no subirlos al repo)
+*.opus
+*.ogg
+*.mp3
+*.m4a
+*.wav
+*.srt
+*.vtt
+samples/
+output/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+[server]
+# Tamaño máximo por archivo subido, en MB.
+maxUploadSize = 500
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#25D366"

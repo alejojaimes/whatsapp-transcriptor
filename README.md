@@ -1,6 +1,8 @@
 <div align="center">
 
-<h1><img src="assets/logo.png" alt="" width="44" align="center"> Transcriptor</h1>
+<img src="assets/logo.svg" alt="Transcriptor" width="104">
+
+# Transcriptor
 
 **Tus audios a texto, gratis y sin salir de tu computadora.**
 
@@ -76,12 +78,16 @@ Los modelos quedan guardados en la caché de Hugging Face (`~/.cache/huggingface
 ```
 transcriptor/
 ├── app.py                   ← interfaz en Streamlit
+├── ui/
+│   ├── components.py        ← piezas visuales en HTML (hero, tarjetas, resultado)
+│   └── theme.css            ← estilos de la app
 ├── src/
 │   ├── config.py            ← modelos, idiomas y formatos soportados
+│   ├── downloader.py        ← descarga del modelo con barra de progreso
 │   ├── transcriber.py       ← carga del modelo y transcripción
 │   └── exporters.py         ← exportación a txt, srt y vtt
 ├── tests/                   ← pruebas con un modelo simulado (no descargan nada)
-├── .streamlit/config.toml   ← límite de subida y tema
+├── .streamlit/config.toml   ← tema (colores, fuente) y límite de subida
 ├── requirements.txt
 └── requirements-dev.txt
 ```
@@ -97,12 +103,18 @@ pytest
 
 ---
 
-## Próximos Features
+## Lo que viene
 
 - [ ] Grabar directamente desde el micrófono
 - [ ] Diarización, para saber quién dice qué
 - [ ] Traducción al inglés con `task="translate"`
 - [ ] Versión de línea de comandos para procesar carpetas completas
+
+---
+
+## Sobre el autor
+
+Soy un ingeniero que enseña. El contexto, la teoría y el paso a paso de mis proyectos los publico en [ajteaches.dev](https://www.ajteaches.dev).
 
 ---
 

@@ -2,11 +2,20 @@
 
 # Tamaños de modelo de Whisper. Más grande = más preciso, pero más lento y pesado.
 MODEL_SIZES = {
-    "tiny": "Tiny (~75 MB) · muy rápido, precisión básica",
-    "base": "Base (~145 MB) · rápido",
-    "small": "Small (~480 MB) · buen equilibrio (recomendado en CPU)",
-    "medium": "Medium (~1.5 GB) · muy preciso, lento en CPU",
-    "large-v3": "Large v3 (~3 GB) · máxima precisión, ideal con GPU",
+    "tiny": "Tiny · pruebas rápidas",
+    "base": "Base · rápido",
+    "small": "Small · equilibrado",
+    "medium": "Medium · preciso",
+    "large-v3": "Large v3 · máxima calidad",
+}
+
+# Tamaño aproximado de descarga, para mostrarlo como ayuda.
+MODEL_DOWNLOAD = {
+    "tiny": "~75 MB",
+    "base": "~145 MB",
+    "small": "~480 MB",
+    "medium": "~1.5 GB",
+    "large-v3": "~3 GB",
 }
 DEFAULT_MODEL = "small"
 

@@ -10,16 +10,16 @@ from pathlib import Path
 
 import streamlit as st
 
-from transcriptor import __version__
-from transcriptor.config import (
+from src import __version__
+from src.config import (
     AUDIO_EXTENSIONS,
     DEFAULT_LANGUAGE,
     DEFAULT_MODEL,
     LANGUAGES,
     MODEL_SIZES,
 )
-from transcriptor.exporters import format_clock, to_srt, to_txt, to_vtt
-from transcriptor.transcriber import detect_device, load_model, transcribe
+from src.exporters import format_clock, to_srt, to_txt, to_vtt
+from src.transcriber import detect_device, load_model, transcribe
 
 st.set_page_config(page_title="Transcriptor", page_icon="🎙️", layout="centered")
 

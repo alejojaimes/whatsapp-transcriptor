@@ -1,5 +1,5 @@
-from transcriptor.exporters import format_clock, to_srt, to_txt, to_vtt
-from transcriptor.transcriber import Segment, Transcription
+from src.exporters import format_clock, to_srt, to_txt, to_vtt
+from src.transcriber import Segment, Transcription
 
 SEGS = [
     Segment(0.0, 2.5, " Hola, ¿cómo estás?"),

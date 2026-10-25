@@ -1,6 +1,7 @@
 <div align="center">
 
-# Transcriptor 🎙️
+
+<h1><img src="assets/logo.svg" alt="" width="44" align="center"> Transcriptor</h1>
 
 **Tus audios a texto, gratis y sin salir de tu computadora.**
 

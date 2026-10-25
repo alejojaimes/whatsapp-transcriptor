@@ -21,7 +21,8 @@ from src.config import (
 from src.exporters import format_clock, to_srt, to_txt, to_vtt
 from src.transcriber import detect_device, load_model, transcribe
 
-st.set_page_config(page_title="Transcriptor", page_icon="🎙️", layout="centered")
+LOGO = Path(__file__).parent / "assets" / "logo.png"
+st.set_page_config(page_title="Transcriptor", page_icon=str(LOGO), layout="centered")
 
 
 @st.cache_resource(show_spinner=False)
@@ -56,7 +57,11 @@ with st.sidebar:
     st.caption(f"Dispositivo: **{device.upper()}** ({compute}) · v{__version__}")
 
 # ---------- Contenido principal ----------
-st.title("🎙️ Transcriptor")
+st.logo(str(LOGO), size="large")
+
+col_logo, col_title = st.columns([1, 6], vertical_alignment="center")
+col_logo.image(str(LOGO), width=72)
+col_title.title("Transcriptor")
 st.write(
     "Convierte audios a texto en tu propia computadora, gratis y sin enviar nada a internet. "
     "Funciona con notas de voz de WhatsApp (.opus / .ogg), MP3, M4A, WAV y más."

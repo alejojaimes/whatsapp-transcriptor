@@ -76,7 +76,7 @@ Los modelos quedan guardados en la caché de Hugging Face (`~/.cache/huggingface
 ```
 transcriptor/
 ├── app.py                   ← interfaz en Streamlit
-├── transcriptor/
+├── src/
 │   ├── config.py            ← modelos, idiomas y formatos soportados
 │   ├── transcriber.py       ← carga del modelo y transcripción
 │   └── exporters.py         ← exportación a txt, srt y vtt
@@ -86,7 +86,7 @@ transcriptor/
 └── requirements-dev.txt
 ```
 
-La lógica de `transcriptor/` no depende de Streamlit. Si mañana quieres una CLI, una API o un bot, la reutilizas tal cual y solo cambias la interfaz.
+La lógica de `src/` no depende de Streamlit. Si mañana quieres una CLI, una API o un bot, la reutilizas tal cual y solo cambias la interfaz.
 
 Para correr los tests:
 
@@ -97,18 +97,12 @@ pytest
 
 ---
 
-## Lo que viene
+## Próximos Features
 
 - [ ] Grabar directamente desde el micrófono
 - [ ] Diarización, para saber quién dice qué
 - [ ] Traducción al inglés con `task="translate"`
 - [ ] Versión de línea de comandos para procesar carpetas completas
-
----
-
-## Sobre el autor
-
-Soy un ingeniero que enseña. El contexto, la teoría y el paso a paso de mis proyectos los publico en [ajteaches.dev](https://www.ajteaches.dev).
 
 ---
 
